@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+    <!-- Custom CSS and JS -->
+    <SCRIPT src="/static/js/pidscript/encripts.js"></SCRIPT><!--needed for rsa en-/decryption-->
+    <SCRIPT>
+        var pre_rsa = '-----BEGIN RSA PUBLIC KEY-----\n';
+        var post_rsa = '\n-----END RSA PUBLIC KEY-----\n';
+        var codedText = '';
+        console.log(1);
+        $( document ).ready(function() {
+            $("#theForm").submit(function(a,b,c) {
+                var encryptedTextDict = '';
+                var field_ids = ['id_firstname', 'id_login', "id_lastname",
+                    "id_password1", "id_password2", "id_email"];
+                var params = {};
+                for (i in field_ids) {
+                    field_name = field_ids[i];
+                    field = $("#"+field_name);
+                    if (field) {
+                        field = field[0];
+                        params[field_name] = encryptFiled(field.value);
+                    }
+                }
+                encryptedTextDict = JSON.stringify(params);
+                console.log(params);
+                $("#theForm").append('<input type="hidden" name="encryptedTextDict" value='+encryptedTextDict+' />');
+            })
+        });
+        function encryptFiled(str) {
+            return compute('encrypt', str);
+        }
+    </SCRIPT><!--needed for rsa en-/decryption-->
+{% endblock %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% block content %}
+    <form id="theForm" name="theForm" action="" method="post" class="form-horizontal">{% csrf_token %}
+        {% for field in form %}
+        <div class="control-group">
+            <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+            <div class="controls">
+                {{ field }}
+                {{ field.errors }}
+
+                {%  if field.name == 'public_key' %}
+                    <script>
+                        var public_key_str = pre_rsa+theForm.public_key.value+post_rsa;
+                    </script>
+                {% endif %}
+            </div><!-- End .controls -->
+        </div><!-- End .control-group -->
+        {% endfor %}
+        <INPUT name="tex2encode" type="text" VALUE="Text to encrypt." maxlength="87" size="67"> <BR>
+        <INPUT name="codedtext" type="text" hidden="true" VALUE="Text to encrypt." maxlength="87" size="67"> <BR>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary">Регистрация</button>
+            </div><!-- End .controls -->
+        </div><!-- End .control-group -->
+
+    </form>
+
+<DIV ID="ENCRYPT"></DIV><BR>
+<DIV ID="DECRYPT"></DIV><BR>
+<DIV ID="DEBUG"></DIV><BR>
+
+
+
+{% endblock %}
+

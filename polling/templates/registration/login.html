@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% block header %}
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <div class="control-group">
+            <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+            <div class="controls">
+                {{ field }}
+                {{ field.errors }}
+            </div><!-- End .controls -->
+        </div><!-- End .control-group -->
+        {% endfor %}
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </div><!-- End .controls -->
+        </div><!-- End .control-group -->
+    </form>
+ <a href="/register/"> <button url="/register/" class="btn btn-primary">Регистрация</button></a>
+{% endblock %}
+
