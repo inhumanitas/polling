@@ -1,16 +1,18 @@
 # coding=utf-8
 import json
-from altauth.api import rsa_gen_keys
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import logout
-
 from settings import LOGOUT_REDIRECT_URL
 from django.contrib.auth.models import User
 from django.template import RequestContext
-from polling.forms import UserRegistrationForm
 
+from polling.forms import UserRegistrationForm
+from altauth.api import RSAWrapper
+
+rsa_wrapper = RSAWrapper()
 
 @login_required
 def index(request):
@@ -23,15 +25,17 @@ def log_out(request):
 
 
 def register(request):
-    p_k, pr_k = rsa_gen_keys(128)
+    p_k = rsa_wrapper.get_public_key()
 
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
-        if form.is_valid():
+        #if form.is_valid():
             # create new user
-            params = json.loads(request.POST[u'encryptedTextDict'])
-            return HttpResponseRedirect('/')
-    p_k_str = p_k.save_pkcs1().split('\n')[1]
+        params = json.loads(request.POST[u'encryptedTextDict'])
+        for param in params:
+            decrypted = rsa_wrapper.decrypt_str(params[param])
+        return HttpResponseRedirect('/')
+    p_k_str = p_k.split('\n')[1]
     p_k_num = p_k_str
     data = {'public_key': p_k_num}
     form = UserRegistrationForm(data)

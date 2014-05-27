@@ -2,18 +2,24 @@
 
 {% block head %}
     <!-- Custom CSS and JS -->
-    <SCRIPT src="/static/js/pidscript/encripts.js"></SCRIPT><!--needed for rsa en-/decryption-->
+    <SCRIPT src="/static/js/jsencripts.js"></SCRIPT><!--needed for rsa en-/decryption-->
     <SCRIPT>
         var pre_rsa = '-----BEGIN RSA PUBLIC KEY-----\n';
         var post_rsa = '\n-----END RSA PUBLIC KEY-----\n';
         var codedText = '';
+        var crypt = new JSEncrypt();
+
         console.log(1);
+
         $( document ).ready(function() {
             $("#theForm").submit(function(a,b,c) {
+
                 var encryptedTextDict = '';
                 var field_ids = ['id_firstname', 'id_login', "id_lastname",
                     "id_password1", "id_password2", "id_email"];
                 var params = {};
+                debugger;
+                crypt.setPublicKey(public_key_str);
                 for (i in field_ids) {
                     field_name = field_ids[i];
                     field = $("#"+field_name);
@@ -28,7 +34,8 @@
             })
         });
         function encryptFiled(str) {
-            return compute('encrypt', str);
+
+            return crypt.encrypt(str);
         }
     </SCRIPT><!--needed for rsa en-/decryption-->
 {% endblock %}
