@@ -1,0 +1,96 @@
+/*
+body>div.container {
+    margin-top: 60px;
+}
+*/
+body>div.footer {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+form div.controls textarea {
+    width: 400px;
+    height: 100px;
+    text-align: center;
+    font-size: 24px;
+
+}
+div.questionnaire h1 {
+    text-align: center;
+    font-size: 24px;
+}
+
+form.questionnaire h1 {
+    text-align: center;
+    font-size: 24px;
+}
+span.order {
+    font-weight: bold;
+}
+
+div.option span.content {
+    margin-right: 25px;
+}
+form.questionnaire p.submit {
+    text-align: center;
+}
+div.option input[type="radio"], div.option input[type="checkbox"] {
+    margin-bottom: 6px;
+}
+p.contact {
+    margin: auto;
+    width: 600px;
+}
+p.contact label {
+    float: left;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+p.contact input {
+    float: left;
+    margin-right: 25px;
+}
+div.question {
+    background-color: white;
+}
+div.thanking {
+    margin-top: 10px;
+}
+div.thanks h1 {
+    font-size: 24px;
+}
+
+span.amount {
+    font-weight: bold;
+}
+span.percentage {
+    /* color: red; */
+    font-weight: bold;
+}
+textarea.message {
+    margin-bottom: 20px;
+    width: 98%;
+    height: 80px;
+}
+
+input#id_title {
+    width: 300px;
+}
+
+div.introduction p, div.thanking p {
+    text-indent: 2em;
+}
+span.option {
+    white-space: nowrap;
+}
+
+div.messages h1 {
+    font-size: 24px;
+    text-align: center;
+}
+div.messages p.date {
+    text-align: center;
+}
+div.messages div.message p.meta {
+    text-align: right;
+}
