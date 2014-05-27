@@ -11,6 +11,7 @@ urlpatterns = patterns(
     url(r'^$', 'polling.views.index'),
     url(r'^logout/$', 'polling.views.log_out', {}, name='logout'),
     url(r'^register/$', 'polling.views.register', {}, name='register'),
+    url(r'^poll/$', 'polling.views.poll'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/user/(\d+)/$', 'polling.views.view_user'),
 )

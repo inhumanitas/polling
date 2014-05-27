@@ -3866,7 +3866,7 @@ RSAKey.prototype.parseKey = function (pem) {
     var reHex = /^\s*(?:[0-9A-Fa-f][0-9A-Fa-f]\s*)+$/;
     var der = reHex.test(pem) ? Hex.decode(pem) : Base64.unarmor(pem);
     var asn1 = ASN1.decode(der);
-debugger;
+
     if (asn1.sub.length === 9) {
 
       // Parse the private key.

@@ -7,7 +7,6 @@ from django.conf import settings
 from django.http import (
     HttpResponseRedirect, HttpResponse, HttpResponseForbidden)
 
-from altauth.api import rsa_gen_keys
 from altauth.models import AlternativePassword, PublicKey
 from altauth.forms import (
     SetAlternativePasswordForm, AlternativePasswordLoginForm, SetPublicKeyForm,
@@ -138,9 +137,11 @@ def public_key_login(request):
 
 
 def generate_public_key(request):
+	pass
+'''
     if request.method == 'POST':
 
-        secret_key, pub_key = rsa_gen_keys(8)
+        secret_key, pub_key = (,)#rsa_gen_keys(8)
 
         username = None
         if 'username' in request.POST:
@@ -156,3 +157,4 @@ def generate_public_key(request):
             user=user, pubkey_type=pub_key)
         #login_token = pb_key.generate_login_token()
         return HttpResponse(secret_key, content_type='text/plain')
+'''

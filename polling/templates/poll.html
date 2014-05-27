@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+{% for field in form %}
+{{ field.label_tag }}: {{ field }}
+{{ field.errors }}
+{% endfor %}
+{{ field.non_field_errors }}
+    <form id="pollForm" name="pollForm" action="" method="post" class="form-horizontal">{% csrf_token %}
+        {% for field in form %}
+        <div class="control-group">
+            <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+            <div class="controls">
+                {{ field }}
+                {{ field.errors }}
+            </div><!-- End .controls -->
+        </div><!-- End .control-group -->
+            <div class="radio">
+                  <label>
+                      <input type="radio">
+                        {{ field }}
+                    </label>
+            </div>
+        {% endfor %}
+
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary">Голосовать</button>
+            </div><!-- End .controls -->
+        </div><!-- End .control-group -->
+    </form>
+{% endblock %}

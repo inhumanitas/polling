@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 
 from polling.forms import UserRegistrationForm
+from polling.models import PollAlternatives
 from altauth.api import RSAWrapper
 
 rsa_wrapper = RSAWrapper()
@@ -26,26 +27,36 @@ def log_out(request):
 
 def register(request):
     p_k = rsa_wrapper.get_public_key()
-
+    #import pdb;pdb.set_trace()
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         #if form.is_valid():
             # create new user
+
         params = json.loads(request.POST[u'encryptedTextDict'])
         for param in params:
             decrypted = rsa_wrapper.decrypt_str(params[param])
         return HttpResponseRedirect('/')
-    p_k_str = p_k.split('\n')[1]
-    p_k_num = p_k_str
-    data = {'public_key': p_k_num}
+    data = {'public_key': p_k}
     form = UserRegistrationForm(data)
 
     return render_to_response(
         'registration/register.html',
-        {'form': form},
+        {'form': form, 'public_key': json.dumps(p_k)},
         context_instance=RequestContext(request),
     )
 
+@login_required
+def poll(request):
+    # do not forget to check if already polled - repolled?
+    if request.method == 'POST':
+        #save choise
+        return HttpResponseRedirect('/')
+
+    presidents = PollAlternatives.objects.filter().values_list('president')
+    return render_to_response('poll.html',
+        {'presidents': presidents},
+        context_instance=RequestContext(request))
 
 @login_required
 def view_user(request, user_id):
