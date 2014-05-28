@@ -10,4 +10,3 @@ class UserRegistrationForm(forms.Form):
     password1 = forms.CharField(label=u'Пароль', widget=forms.PasswordInput())
     password2 = forms.CharField(label=u'Пароль(снова)', widget=forms.PasswordInput())
     email = forms.EmailField(label=u'Почтовый ящик')
-    public_key = forms.CharField(widget=forms.Textarea)

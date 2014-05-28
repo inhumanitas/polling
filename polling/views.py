@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import logout
+from django.contrib.auth.models import User
 from settings import LOGOUT_REDIRECT_URL
 from django.contrib.auth.models import User
 from django.template import RequestContext
@@ -34,23 +35,23 @@ def register(request):
     p_k = rsa_wrapper.get_public_key()
 
     if request.method == 'POST':
-
         form_data = {}
         for param in request.POST:
             try:
                 form_data[param] = rsa_wrapper.decrypt_str(request.POST[param])
             except Exception as ex:
-                return render_to_response(
-                    'registration/register.html', {'error': ex.message},
-                    context_instance=RequestContext(request),
-                )
+                print "Couldn't decode string:%s" % request.POST[param]
+                continue
 
-        form = UserRegistrationForm(request.POST)
+        form = UserRegistrationForm(form_data)
         if form.is_valid():
             # create new user
+            import pdb;pdb.set_trace()
+            u,c = User.objects.get_or_create(**form_data)
+
             return HttpResponseRedirect('/')
 
-    data = {'public_key': p_k}
+    data = {'public_key': 'p_k'}
     form = UserRegistrationForm(data)
 
     return render_to_response(
@@ -65,7 +66,7 @@ def poll(request):
     if request.method == 'POST':
         #save choise
         return HttpResponseRedirect('/')
-
+    import pdb;pdb.set_trace()
     presidents = PollAlternatives.objects.filter().values_list('president')
     return render_to_response(
         'poll.html', {'presidents': presidents},

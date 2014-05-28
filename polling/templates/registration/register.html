@@ -10,12 +10,11 @@
         $( document ).ready(function() {
             $("#theForm").submit(function(a,b,c) {
                 var field_ids = ['id_firstname', 'id_login', "id_lastname",
-		                      "id_password1", "id_password2", "id_email"];
+                              "id_password1", "id_password2", "id_email"];
                 debugger;
-		        var public_key_str = "{{public_key}}";
-		        public_key_str = public_key_str.replace( /&quot;/g,'');//
-		        public_key_str =  $("#pubkey")[0].value;
-                crypt.setPublicKey(public_key_str);
+                $("#pubkey").val({{public_key|safe}});
+
+                crypt.setPublicKey($("#pubkey").val());
                 for (i in field_ids) {
                     field_name = field_ids[i];
                     field = $("#"+field_name);
@@ -38,7 +37,6 @@
 {% endif %}
 
 {% block main %}
-    <textarea id="pubkey" hidden="true" rows="15" cols="65">{{public_key|safe}}</textarea><br/>
     {% if error %}
         {{ error }}
     {% else %}
@@ -60,5 +58,5 @@
             </div><!-- End .control-group -->
         </form>
     {% endif %}
+    <textarea id="pubkey" style="display:none"></textarea><br/>
 {% endblock %}
-
