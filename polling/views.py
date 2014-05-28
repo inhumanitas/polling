@@ -1,4 +1,5 @@
 # coding=utf-8
+import base64
 import json
 
 from django.http import HttpResponseRedirect
@@ -26,17 +27,29 @@ def log_out(request):
 
 
 def register(request):
-    p_k = rsa_wrapper.get_public_key()
-    #import pdb;pdb.set_trace()
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        #if form.is_valid():
-            # create new user
-
-        params = json.loads(request.POST[u'encryptedTextDict'])
-        for param in params:
-            decrypted = rsa_wrapper.decrypt_str(params[param])
+    # залогиненых посылаем на глвную
+    if request.user.is_active:
         return HttpResponseRedirect('/')
+
+    p_k = rsa_wrapper.get_public_key()
+
+    if request.method == 'POST':
+
+        form_data = {}
+        for param in request.POST:
+            try:
+                form_data[param] = rsa_wrapper.decrypt_str(request.POST[param])
+            except Exception as ex:
+                return render_to_response(
+                    'registration/register.html', {'error': ex.message},
+                    context_instance=RequestContext(request),
+                )
+
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            # create new user
+            return HttpResponseRedirect('/')
+
     data = {'public_key': p_k}
     form = UserRegistrationForm(data)
 
@@ -54,8 +67,8 @@ def poll(request):
         return HttpResponseRedirect('/')
 
     presidents = PollAlternatives.objects.filter().values_list('president')
-    return render_to_response('poll.html',
-        {'presidents': presidents},
+    return render_to_response(
+        'poll.html', {'presidents': presidents},
         context_instance=RequestContext(request))
 
 @login_required

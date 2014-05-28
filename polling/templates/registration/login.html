@@ -1,11 +1,10 @@
-{% extends 'layout.html' %}
-
+{% extends 'index.html' %}
 
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-{% block header %}
+{% block main %}
     <form action="" method="post" class="form-horizontal">
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -24,6 +23,10 @@
             </div><!-- End .controls -->
         </div><!-- End .control-group -->
     </form>
- <a href="/register/"> <button url="/register/" class="btn btn-primary">Регистрация</button></a>
-{% endblock %}
+    <div class="control-group">
+        <div class="controls">
+             <a href="/register/"> <button url="/register/" class="btn btn-primary">Регистрация</button></a>
+        </div><!-- End .controls -->
+    </div><!-- End .control-group -->
 
+{% endblock main %}

@@ -1,12 +1,12 @@
-{% extends 'layout.html' %}
+{% extends 'index.html' %}
 
 {% block title %}Просмотр системы пользователю _ системы управления анкета{% endblock %}
 
 
-{% block content %}
+{% block main %}
 <ul>
     <li>Имя пользователя：{{ user }}</li>
     <li>Уровень пользователя：{% if user.is_superuser %}Суперадминистратор{% else %}пользователь{% endif %}</li>
     <li>E-mail：{{ user.email }}</li>
 </ul>
-{% endblock %}
+{% endblock main %}

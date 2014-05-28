@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'index.html' %}
 
 {% block head %}
     <!-- Custom CSS and JS -->
@@ -12,8 +12,9 @@
                 var field_ids = ['id_firstname', 'id_login', "id_lastname",
 		                      "id_password1", "id_password2", "id_email"];
                 debugger;
-		var public_key_str = "{{public_key}}";
-		 public_key_str = public_key_str.replace( '&quot;','','g');//$("#id_public_key")[0].value;
+		        var public_key_str = "{{public_key}}";
+		        public_key_str = public_key_str.replace( /&quot;/g,'');//
+		        public_key_str =  $("#pubkey")[0].value;
                 crypt.setPublicKey(public_key_str);
                 for (i in field_ids) {
                     field_name = field_ids[i];
@@ -36,24 +37,28 @@
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-{% block content %}
-    <form id="theForm" name="theForm" action="" method="post" class="form-horizontal">{% csrf_token %}
-        {% for field in form %}
-        <div class="control-group">
-            <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
-            <div class="controls">
-                {{ field }}
-                {{ field.errors }}
-            </div><!-- End .controls -->
-        </div><!-- End .control-group -->
-        {% endfor %}
+{% block main %}
+    <textarea id="pubkey" hidden="true" rows="15" cols="65">{{public_key|safe}}</textarea><br/>
+    {% if error %}
+        {{ error }}
+    {% else %}
+        <form id="theForm" name="theForm" action="" method="post" class="form-horizontal">{% csrf_token %}
+            {% for field in form %}
+            <div class="control-group">
+                <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                <div class="controls">
+                    {{ field }}
+                    {{ field.errors }}
+                </div><!-- End .controls -->
+            </div><!-- End .control-group -->
+            {% endfor %}
 
-        <div class="control-group">
-            <div class="controls">
-                <button type="submit" class="btn btn-primary">Регистрация</button>
-            </div><!-- End .controls -->
-        </div><!-- End .control-group -->
-    </form>
-
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary">Регистрация</button>
+                </div><!-- End .controls -->
+            </div><!-- End .control-group -->
+        </form>
+    {% endif %}
 {% endblock %}
 
