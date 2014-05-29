@@ -1,27 +1,21 @@
 {% extends 'index.html' %}
 {% block main %}
-
-{% for field in form %}
-{{ field.label_tag }}: {{ field }}
-{{ field.errors }}
-{% endfor %}
 {{ field.non_field_errors }}
     <form id="pollForm" name="pollForm" action="" method="post" class="form-horizontal">{% csrf_token %}
-        {% for field in form %}
-        <div class="control-group">
-            <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
-            <div class="controls">
-                {{ field }}
-                {{ field.errors }}
-            </div><!-- End .controls -->
-        </div><!-- End .control-group -->
+        <div id="id_president">
+        {% for field_name, l in presidents %}
             <div class="radio">
-                  <label>
-                      <input type="radio">
-                        {{ field }}
-                    </label>
+                <input type="radio" name="president" value="{{ field_name }}"/>
+                {{ field_name }}
             </div>
         {% endfor %}
+        </div>
+        <div class="input-group" id="alt_key">
+          <span class="input-group-addon">Код для голосования</span>
+          <input type="text" class="form-control" placeholder="Код для голосования" name='alt_key' id="alt_key">
+        </div>
+
+        <br/><br/>
 
         <div class="control-group">
             <div class="controls">

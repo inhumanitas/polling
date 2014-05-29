@@ -9,7 +9,9 @@
             {% endblock %}
         </div><!-- End .span2 -->
         <div class="span10">
-            {% block main %}<!-- Main content -->{% endblock %}
+            {% block main %}<!-- Main content -->
+                {{ result|safe }}
+            {% endblock %}
         </div><!-- End .span10 -->
     </div><!-- End .row -->
 </div><!-- End .container -->

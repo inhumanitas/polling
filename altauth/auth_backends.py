@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User, check_password
 
-from altauth.models import AlternativePassword,PublicKeyLoginToken
+from altauth.models import AlternativePassword, PublicKeyLoginToken
 
 """
 Alternative authentication backends 
@@ -9,7 +9,7 @@ Alternative authentication backends
 """
 
 
-def alternative_password_authenticate(username,alternative_password):
+def alternative_password_authenticate(username, alternative_password):
     """
         Login function for AlternativePasswordBackend
     """
@@ -17,7 +17,8 @@ def alternative_password_authenticate(username,alternative_password):
         try:
             user = User.objects.get(username=username)
             try:
-                user_alternative_password = AlternativePassword.objects.get(user = user)
+                user_alternative_password = AlternativePassword.objects.get(
+                    user=user)
                 if check_password(
                         alternative_password,
                         user_alternative_password.alternative_password):
@@ -29,7 +30,7 @@ def alternative_password_authenticate(username,alternative_password):
     return None
 
 
-def pubkey_authenticate(username,token, pubkey_type = 'RSA'):
+def pubkey_authenticate(username,token, pubkey_type='RSA'):
     """
     Login function for PublicKeyBackend
     """

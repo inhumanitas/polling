@@ -1,3 +1,4 @@
+# coding=utf-8
 import random
 import rsa
 
@@ -14,6 +15,21 @@ ALLOWED_PUBLICKEY_TYPES = (
 
 # This token length requires a minimum size of 64 for public keys
 TOKEN_MIN_LENGTH, TOKEN_MAX_LENGTH = (30, 60)
+
+
+def check_alt_key(user, alt_key):
+    u""" Is user has the same key """
+    return get_user_alt_key(user) == alt_key
+
+
+def get_user_alt_key(user):
+    try:
+        alt_pass_obj = AlternativePassword.objects.get(
+            user=user)
+        alt_pass = alt_pass_obj.alternative_password
+    except AlternativePassword.DoesNotExist:
+        alt_pass = None
+    return alt_pass
 
 
 class AlternativePassword(models.Model):

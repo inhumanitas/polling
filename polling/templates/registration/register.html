@@ -9,9 +9,8 @@
 
         $( document ).ready(function() {
             $("#theForm").submit(function(a,b,c) {
-                var field_ids = ['id_firstname', 'id_login', "id_lastname",
+                var field_ids = ['id_first_name', 'id_username', "id_last_name",
                               "id_password1", "id_password2", "id_email"];
-                debugger;
                 $("#pubkey").val({{public_key|safe}});
 
                 crypt.setPublicKey($("#pubkey").val());
@@ -26,7 +25,6 @@
             })
         });
         function encryptFiled(str) {
-
             return crypt.encrypt(str);
         }
     </SCRIPT><!--needed for rsa en-/decryption-->

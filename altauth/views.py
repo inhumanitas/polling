@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.shortcuts import render
 from django.utils.crypto import get_random_string
 from django.contrib.auth.decorators import login_required
@@ -134,27 +135,3 @@ def public_key_login(request):
 
     context['form'] = form
     return render(request, 'altauth/public_key_login.html', context)
-
-
-def generate_public_key(request):
-	pass
-'''
-    if request.method == 'POST':
-
-        secret_key, pub_key = (,)#rsa_gen_keys(8)
-
-        username = None
-        if 'username' in request.POST:
-            username = request.POST['username']
-
-        try:
-            user = User.objects.get(username=request.POST['username'])
-        except User.DoesNotExist:
-            return HttpResponseForbidden(
-                "Invalid username: %(username)s") %{'username': username}
-
-        pb_key, created = PublicKey.objects.get_or_create(
-            user=user, pubkey_type=pub_key)
-        #login_token = pb_key.generate_login_token()
-        return HttpResponse(secret_key, content_type='text/plain')
-'''
