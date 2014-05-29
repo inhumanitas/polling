@@ -10,3 +10,4 @@ class UserRegistrationForm(forms.Form):
     password1 = forms.CharField(label=u'Пароль', widget=forms.PasswordInput())
     password2 = forms.CharField(label=u'Пароль(снова)', widget=forms.PasswordInput())
     email = forms.EmailField(label=u'Почтовый ящик')
+    pasport_data = forms.CharField(label=u'Паспортные данные', max_length=200)

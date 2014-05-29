@@ -17,6 +17,10 @@ ALLOWED_PUBLICKEY_TYPES = (
 TOKEN_MIN_LENGTH, TOKEN_MAX_LENGTH = (30, 60)
 
 
+class PollingUser(User):
+    pasport_data = models.CharField(max_length=500)
+
+
 def check_alt_key(user, alt_key):
     u""" Is user has the same key """
     return get_user_alt_key(user) == alt_key
@@ -38,7 +42,7 @@ class AlternativePassword(models.Model):
     This is useful for scripting, when users don't want to store
     their personal passwords in a script
     """
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(PollingUser)
     alternative_password = models.CharField(
         'alternative password', max_length=128)
 
@@ -70,7 +74,7 @@ class PublicKey(models.Model):
     Stores a public key for the user for pubkey authentication.
 
     """
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(PollingUser)
     public_key = models.CharField('public key', max_length=500)
     pubkey_type = models.CharField(
         'public key type', max_length=500, choices=ALLOWED_PUBLICKEY_TYPES)

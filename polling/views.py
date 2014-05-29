@@ -8,11 +8,12 @@ from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import logout
 from django.contrib.auth.models import User, make_password
-from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from altauth.models import AlternativePassword, check_alt_key, get_user_alt_key
+from django.db.utils import IntegrityError
+from altauth.models import AlternativePassword, check_alt_key, get_user_alt_key, \
+    PollingUser
 from polling.forms import UserRegistrationForm
 from polling.models import PollAlternatives, Poll, create_def_choices
 from altauth.api import RSAWrapper
@@ -63,8 +64,9 @@ def register(request):
                     'index.html', {'result': u"Не верный пароль"},
                     context_instance=RequestContext(request),
                 )
+            pasport_data = form_data.pop(u'pasport_data')
+            user, c = PollingUser.objects.get_or_create(**form_data)
 
-            user, c = User.objects.get_or_create(**form_data)
             salt = random.randrange(1024)
             alternative_password = make_password(pas, salt)
             alt_pas = AlternativePassword()
@@ -96,16 +98,20 @@ def poll(request):
 
     if request.method == 'POST':
         # save choice Poll
+        poll_user = PollingUser.objects.get(id=request.user.id)
         res = u"Не верный запрос"
         alt_key = request.POST[u'alt_key'] if u'alt_key' in request.POST else None
         president = request.POST[u'president'] if u'president' in request.POST else None
-        if alt_key and president and check_alt_key(request.user, alt_key):
+        if alt_key and president and check_alt_key(poll_user, alt_key):
             res = u"Ваш голос учтен"
             poll = Poll()
-            poll.user = request.user
+            poll.user = poll_user
             poll.choice = PollAlternatives.objects.get(president=president)
-            poll.save()
-        render_to_response('index.html', {'result': res})
+            try:
+                poll.save()
+            except IntegrityError:
+                res = u"Вы уже голосовали"
+        return render_to_response('index.html', {'result': res})
 
     presidents = PollAlternatives.objects.filter().values_list('president')
     return render_to_response(

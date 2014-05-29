@@ -1,6 +1,6 @@
 # coding=utf-8
 from django.db import models
-from django.contrib.auth.models import User
+from altauth.models import PollingUser
 
 
 class PollAlternatives(models.Model):
@@ -8,7 +8,7 @@ class PollAlternatives(models.Model):
 
 
 class Poll(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(PollingUser)
     choice = models.ForeignKey(PollAlternatives)
 
 
