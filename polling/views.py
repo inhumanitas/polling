@@ -65,18 +65,29 @@ def register(request):
                     context_instance=RequestContext(request),
                 )
             pasport_data = form_data.pop(u'pasport_data')
-            user, c = PollingUser.objects.get_or_create(**form_data)
+
+            try:
+                user, c = PollingUser.objects.get_or_create(**form_data)
+            except IntegrityError:
+                res = "Пользователь уже существует"
+                return render_to_response(
+                    'index.html', {'result': res},
+                    context_instance=RequestContext(request),
+                )
 
             salt = random.randrange(1024)
             alternative_password = make_password(pas, salt)
-            alt_pas = AlternativePassword()
-            alt_pas.user = user
-            alt_pas.alternative_password = alternative_password
-            alt_pas.save()
+            alt_pas, created = AlternativePassword.objects.get_or_create(user=user)
+            if created:
+                alt_pas.alternative_password = alternative_password
+                alt_pas.save()
+            else:
+                alternative_password = alt_pas.alternative_password
+
             done = lambda x: u'Ваш код для голосования %s' % x
             error = u'Произошла ошибка'
-            res = done(alternative_password) if (alternative_password
-                                                 and user) else error
+            res = done(alternative_password) if (alt_pas and user) else error
+
             return render_to_response(
                 'index.html', {'result': res},
                 context_instance=RequestContext(request),
